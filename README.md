@@ -118,3 +118,19 @@ telnet localhost 4000
 telnet <RPI_IP_ADDRESS> 4000
 
 ```
+
+### Expect Shell Script
+
+guides: 
+    - https://community.cisco.com/t5/devnet-general-knowledge-base/network-automation-basics-automate-shell-scripts-with-expect/ta-p/4646253
+    - https://www.geeksforgeeks.org/linux-unix/expect-command-in-linux-with-examples/
+
+```bash
+
+# Install expect
+sudo apt install expect -y
+sudo nano base_config.exp
+chmod +x base_config.exp
+
+```
+

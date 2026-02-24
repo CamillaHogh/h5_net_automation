@@ -2,11 +2,14 @@
 
 # Variables
 #set port 4000
-#set console_password "Password1!"
-#set enable_password "Password1!"
-set username "cisco"
+set console_password "Password1!"
+set enable_password "Password1!"
+set ssh_user "cisco"
+set ssh_password "cisco"
+
 # Will wait for x seconds for a prompt before failing
 set timeout 20
+set conf_prompt "(config)#"
 
 # Prompt user for port
 send_user -- "Enter Port number (4000-4003): "
@@ -26,30 +29,37 @@ send "\r"
 expect {
 	# If Password: appears enter console_password
 	"Password:" {
-	# Prompt console password
-	# stty -echo disables teminal echo (hides user input when typing)
-	stty -echo
-	send_user -- "Enter Console Password: "
-	expect_user -re "(.*)\n"
-	send_user "\n"
-	stty echo
-	set console_password $expect_out(1,string)
-	send "$console_password\r"
+		# If console_password exists, try it
+		if {
+			[info exists console_password]
+			send "$console_password\r"
+		}
+		# Prompt the user for console password
+		else {
+			# stty -echo disables teminal echo (hides user input when typing)
+			stty -echo
+			send_user -- "Enter Console Password: "
+			expect_user -re "(.*)\n"
+			send_user "\n"
+			stty echo
+			set console_password $expect_out(1,string)
+			send "$console_password\r"
+		}
 	}
 
 	# If in config mode return to enable mode and rerun loop
 	"config" {
-	send "exit\r"
-	# exp_continue returns to start of loop
-	exp_continue
+		send "exit\r"
+		# exp_continue returns to start of loop
+		exp_continue
 	}
 
 	# If in enable mode exit to user mode and rerun loop
 	"#" {
-	send "exit\r"
-	sleep 2
-	send "\r"
-	exp_continue
+		send "exit\r"
+		sleep 2
+		send "\r"
+		exp_continue
 	}
 
 	# if in user mode break loop
@@ -71,12 +81,79 @@ expect {
         set enable_password $expect_out(1,string)
         send "$enable_password\r"
 	}
-	"#"
+	"#" {}
 }
 
 send "conf t\r"
-expect "config"
+expect "$conf_prompt"
 
+#send "hostname $hostname\r"
+#expect "$conf_prompt"
+
+send "enable secret $enable_password\r"
+expect "$conf_prompt"
+
+send "service password-encryption\r"
+expect "$conf_prompt"
+
+send "no ip domain lookup\r"
+expect "$conf_prompt"
+
+send "username $ssh_user secret $ssh_password\r"
+expect "$conf_prompt"
+
+send "ip ssh version 2\r"
+expect "$conf_prompt"
+
+send "crypto key generate rsa modulus 2080\r"
+expect "$conf_prompt"
+
+send "line vty 0 15\r"
+expect ""
+
+send "transport input ssh\r"
+expect ""
+
+send "exec-timeout 5 0\r"
+expect ""
+
+send "history size 100\r"
+expect ""
+
+send "logging synchronous\r"
+expect ""
+
+send "login local"
+expect ""
+
+send "exit\r"
+expect "$conf_prompt"
+
+send "line console 0\r"
+expect ""
+
+send "password $console_password\r"
+expect ""
+
+send "history size 100\r"
+expect ""
+
+send "exec-timeout 5 0\r"
+expect ""
+
+send "logging synchronous\r"
+expect ""
+
+send "login\r"
+expect ""
+
+send "end\r"
+expect "#"
+
+send "wr\r"
+expect "#"
+
+send "logout\r"
 
 # 'interact' allows you to jump in and interact with the shell during automation
 #interact
