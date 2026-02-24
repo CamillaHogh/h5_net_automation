@@ -1,0 +1,82 @@
+#!/usr/bin/env expect
+
+# Variables
+#set port 4000
+#set console_password "Password1!"
+#set enable_password "Password1!"
+set username "cisco"
+# Will wait for x seconds for a prompt before failing
+set timeout 20
+
+# Prompt user for port
+send_user -- "Enter Port number (4000-4003): "
+expect_user -re "(.*)\n"
+send_user "\n"
+set port $expect_out(1,string)
+
+# Open the console connection using the port variable
+spawn telnet localhost $port
+
+# expects wait for this input to appear
+expect "Escape character"
+# Wake up the console (hits enter key)
+send "\r"
+
+# If prompt is Password enter console password otherwise if Prompt is > then continue
+expect {
+	# If Password: appears enter console_password
+	"Password:" {
+	# Prompt console password
+	# stty -echo disables teminal echo (hides user input when typing)
+	stty -echo
+	send_user -- "Enter Console Password: "
+	expect_user -re "(.*)\n"
+	send_user "\n"
+	stty echo
+	set console_password $expect_out(1,string)
+	send "$console_password\r"
+	}
+
+	# If in config mode return to enable mode and rerun loop
+	"config" {
+	send "exit\r"
+	# exp_continue returns to start of loop
+	exp_continue
+	}
+
+	# If in enable mode exit to user mode and rerun loop
+	"#" {
+	send "exit\r"
+	sleep 2
+	send "\r"
+	exp_continue
+	}
+
+	# if in user mode break loop
+	">" {}
+}
+
+# 'send' sends the command as a reply to an expect
+send "enable\r"
+
+expect {
+	"Password:" {
+        # Prompt enable password 
+        # stty -echo disables teminal echo (hides user input when typing)
+        stty -echo
+        send_user -- "Enter Enable Password: "
+        expect_user -re "(.*)\n"
+        send_user "\n"
+        stty echo
+        set enable_password $expect_out(1,string)
+        send "$enable_password\r"
+	}
+	"#"
+}
+
+send "conf t\r"
+expect "config"
+
+
+# 'interact' allows you to jump in and interact with the shell during automation
+#interact
