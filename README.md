@@ -3,7 +3,7 @@
 Documentation for the collection.
 
 ## Roles
-get_ios_vers - Collects information about IOS Version
+get_ios_version - Collects information about IOS Version
 get_run_config - Collects information about running configuration
 get_start_config - Collects information about startup configuration
 get_vlan_dat - Collects information about VLAN database
