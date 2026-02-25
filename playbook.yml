@@ -12,14 +12,8 @@
   gather_facts: false
 
   roles:
-    # - get_info
+    - get_info
     # - get_run_config
     - tftp_backup
-
-#- import_playbook: playbooks/get_ios_info.yml
-#- import_playbook: playbooks/backup_config.yml
-#- import_playbook: playbooks/update_ios.yml
-#- import_playbook: playbooks/ping_plotter.yml
-#- import_playbook: playbooks/configure_lag.yml
 
 ...

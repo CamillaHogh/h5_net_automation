@@ -24,14 +24,17 @@
     msg: "{{ device_summary }}"
     verbosity: 3
 
-- name: Get current timestamp
-  set_fact:
-    current_timestamp: "{{ '%Y%m%d_%H%M%S' | strftime }}"
+- name: Create info directory
+  ansible.builtin.file:
+    path: "{{ info_folder_path }}/{{ timestamp }}"
+    state: directory
+    mode: '0755'
+  when: save_info == true
 
 - name: Save IOS Device Information to a file
   ansible.builtin.copy:
     content: "{{ device_summary }}"
-    dest: "{{ info_folder_path }}/{{ inventory_hostname }}_info_{{ current_timestamp }}.txt"
+    dest: "{{ info_folder_path }}/{{ timestamp }}/{{ inventory_hostname }}_info_{{ timestamp }}.txt"
   when: save_info == true
 
 ...
