@@ -207,6 +207,8 @@ Host 10.0.0.*
 
 ### TFTP Server
 
+Guide used: https://oneuptime.com/blog/post/2026-02-08-how-to-run-tftp-server-in-docker/view
+
 Transfer the docker-compose and Dockerfile to the console server, and run the following commands to set up the TFTP server
 
 ``bash
