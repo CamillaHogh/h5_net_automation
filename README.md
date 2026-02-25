@@ -205,3 +205,22 @@ Host 10.0.0.*
     MACs +hmac-sha1,hmac-sha1-96
 ```
 
+### TFTP Server
+
+Transfer the docker-compose and Dockerfile to the console server, and run the following commands to set up the TFTP server
+
+``bash
+
+# create folders for tftp server
+mkdir tftp-server
+cd tftp-server
+mkdir tftp-data
+cd tftp-data
+mkdir running_config startup_config vlan_dat
+cd ..
+chmod -R 777 tftp-data
+
+# start the tftp server container
+docker compose up -d
+
+```

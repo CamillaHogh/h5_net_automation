@@ -8,4 +8,7 @@
 - name: Import transfer_vlan_dat tasks
   import_tasks: transfer_vlan_dat.yml
 
+- name: Import get_tftp_data tasks
+  import_tasks: get_tftp_data.yml
+
 ...

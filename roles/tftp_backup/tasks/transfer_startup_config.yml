@@ -2,7 +2,7 @@
 - name: Backup startup-config to TFTP server
   cisco.ios.ios_command:
     commands:
-      - command: "copy startup-config tftp://{{ tftp_server_ip }}/{{ inventory_hostname }}_startup_{{ timestamp }}.cfg"
+      - command: "copy startup-config tftp://{{ tftp_server_ip }}/{{ tftp_startup_config_folder }}/{{ inventory_hostname }}_startup_{{ timestamp }}.cfg"
         prompt:
           - "Address or name of remote host"
           - "Destination filename"

@@ -1,0 +1,40 @@
+---
+- name: Create local configs directory structure
+  file:
+    path: "{{ tftp_local_configs_folder }}/{{ item }}/{{ timestamp }}"
+    state: directory
+    mode: '0755'
+  delegate_to: localhost
+  run_once: true
+  loop:
+    - "{{ tftp_running_config_folder }}"
+    - "{{ tftp_startup_config_folder }}"
+    - "{{ tftp_vlan_dat_folder }}"
+
+- name: Download running-config files from TFTP server
+  shell: |
+    cd "{{ tftp_local_configs_folder }}/{{ tftp_running_config_folder }}/{{ timestamp }}"
+    tftp "{{ tftp_server_ip }}" << EOF
+    get {{ tftp_running_config_folder }}/{{ inventory_hostname }}_running_{{ timestamp }}.cfg {{ inventory_hostname }}_running_{{ timestamp }}.cfg
+    quit
+    EOF
+  delegate_to: localhost
+
+- name: Download startup-config files from TFTP server
+  shell: |
+    cd "{{ tftp_local_configs_folder }}/{{ tftp_startup_config_folder }}/{{ timestamp }}"
+    tftp "{{ tftp_server_ip }}" << EOF
+    get {{ tftp_startup_config_folder }}/{{ inventory_hostname }}_startup_{{ timestamp }}.cfg {{ inventory_hostname }}_startup_{{ timestamp }}.cfg
+    quit
+    EOF
+  delegate_to: localhost
+
+- name: Download vlan.dat files from TFTP server
+  shell: |
+    cd "{{ tftp_local_configs_folder }}/{{ tftp_vlan_dat_folder }}/{{ timestamp }}"
+    tftp "{{ tftp_server_ip }}" << EOF
+    get {{ tftp_vlan_dat_folder }}/{{ inventory_hostname }}_vlan_{{ timestamp }}.dat {{ inventory_hostname }}_vlan_{{ timestamp }}.dat
+    quit
+    EOF
+  delegate_to: localhost
+  when: inventory_hostname in groups['switches']

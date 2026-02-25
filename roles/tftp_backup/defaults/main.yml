@@ -1,2 +1,6 @@
 tftp_server_ip: 10.0.0.100
 timestamp: "{{ lookup('pipe', 'date +%Y-%m-%d_%H%M') }}"
+tftp_startup_config_folder: "startup_config"
+tftp_running_config_folder: "running_config"
+tftp_vlan_dat_folder: "vlan_dat"
+tftp_local_configs_folder: "./configs"

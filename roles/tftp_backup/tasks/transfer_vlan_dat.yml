@@ -3,7 +3,7 @@
   when: inventory_hostname in groups['switches']
   cisco.ios.ios_command:
     commands:
-      - command: "copy flash:vlan.dat tftp://{{ tftp_server_ip }}/{{ inventory_hostname }}_vlan_{{ timestamp }}.dat"
+      - command: "copy flash:vlan.dat tftp://{{ tftp_server_ip }}/{{ tftp_vlan_dat_folder }}/{{ inventory_hostname }}_vlan_{{ timestamp }}.dat"
         prompt:
           - "Address or name of remote host"
           - "Destination filename"
