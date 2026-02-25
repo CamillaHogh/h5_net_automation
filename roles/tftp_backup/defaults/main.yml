@@ -1,0 +1,2 @@
+tftp_server_ip: 10.0.0.100
+timestamp: "{{ lookup('pipe', 'date +%Y-%m-%d_%H%M') }}"

@@ -19,4 +19,19 @@
   ansible.builtin.set_fact:
     device_interfaces: "{{ ansible_net_interfaces | dict2items | map(attribute='key') | list }}"
 
+- name: Debug IOS Device Information
+  ansible.builtin.debug:
+    msg: "{{ device_summary }}"
+    verbosity: 3
+
+- name: Get current timestamp
+  set_fact:
+    current_timestamp: "{{ '%Y%m%d_%H%M%S' | strftime }}"
+
+- name: Save IOS Device Information to a file
+  ansible.builtin.copy:
+    content: "{{ device_summary }}"
+    dest: "{{ info_folder_path }}/{{ inventory_hostname }}_info_{{ current_timestamp }}.txt"
+  when: save_info == true
+
 ...

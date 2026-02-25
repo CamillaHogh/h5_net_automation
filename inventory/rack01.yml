@@ -1,6 +1,8 @@
 all:
   vars:
   hosts:
+    tftp_server:
+      ansible_host: 10.0.0.100
     console_server:
       ansible_host: 10.0.0.100
       ansible_user: sysadmin

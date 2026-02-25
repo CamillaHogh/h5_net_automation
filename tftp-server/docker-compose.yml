@@ -1,0 +1,8 @@
+services:
+  tftp:
+    build: .
+    container_name: tftp-server
+    ports:
+      - "69:69/udp"
+    volumes:
+      - ./tftp-data:/var/tftpboot

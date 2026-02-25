@@ -1,0 +1,11 @@
+---
+- name: Import transfer_run_config tasks
+  import_tasks: transfer_run_config.yml
+
+- name: Import transfer_startup_config tasks
+  import_tasks: transfer_startup_config.yml
+
+- name: Import transfer_vlan_dat tasks
+  import_tasks: transfer_vlan_dat.yml
+
+...

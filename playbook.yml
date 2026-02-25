@@ -1,3 +1,4 @@
+# This playbook executes all of the playbooks in the 'playbooks' directory.
 ---
 - name: === TEST CONNECTION ===
   hosts: cisco
@@ -6,50 +7,19 @@
     - name: Ping device
       ansible.builtin.ping:
 
-- name: === GATHER IOS INFO ===
+- name: === RUN ALL ROLES ===
   hosts: cisco
   gather_facts: false
-  vars:
-    save_info: true
-    info_folder_path: "configs"
-  tasks:
-    - name: Run get_info role
-      ansible.builtin.include_role:
-        name: get_info
 
-    - name: Debug IOS Device Information
-      ansible.builtin.debug:
-        msg: "{{ device_summary }}"
+  roles:
+    # - get_info
+    # - get_run_config
+    - tftp_backup
 
-    - name: Get current timestamp
-      set_fact:
-        current_timestamp: "{{ '%Y%m%d_%H%M%S' | strftime }}"
-
-    - name: Save IOS Device Information to a file
-      ansible.builtin.copy:
-        content: "{{ device_summary }}"
-        dest: "{{ info_folder_path }}/{{ inventory_hostname }}_info_{{ current_timestamp }}.txt"
-      when: save_info == true
-
-- name: === GATHER RUNNING CONFIG ===
-  hosts: cisco
-  gather_facts: false
-  vars:
-    backup_running_config: true
-    backup_folder_path: "configs"
-  tasks:
-    - name: Run get_run_config role
-      ansible.builtin.include_role:
-        name: get_run_config
-    
-    - name: Get current timestamp
-      set_fact:
-        current_timestamp: "{{ '%Y%m%d_%H%M%S' | strftime }}"
-      
-    - name: Save Running Config to a file
-      ansible.builtin.copy:
-        content: "{{ device_running_config }}"
-        dest: "{{ backup_folder_path }}/{{ inventory_hostname }}_running_config_{{ current_timestamp }}.txt"
-      when: backup_running_config == true
+#- import_playbook: playbooks/get_ios_info.yml
+#- import_playbook: playbooks/backup_config.yml
+#- import_playbook: playbooks/update_ios.yml
+#- import_playbook: playbooks/ping_plotter.yml
+#- import_playbook: playbooks/configure_lag.yml
 
 ...

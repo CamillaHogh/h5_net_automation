@@ -10,4 +10,13 @@
   ansible.builtin.set_fact:
     device_running_config: "{{ running_config.stdout[0] }}"
 
+- name: Get current timestamp
+  set_fact:
+    current_timestamp: "{{ '%Y%m%d_%H%M%S' | strftime }}"
+  
+- name: Save Running Config to a file
+  ansible.builtin.copy:
+    content: "{{ device_running_config }}"
+    dest: "{{ backup_folder_path }}/{{ inventory_hostname }}_running_config_{{ current_timestamp }}.txt"
+  when: backup_running_config == true
 ...
