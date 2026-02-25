@@ -139,3 +139,69 @@ chmod +x base_config.exp
 ```bash
 ansible all -m ping
 ```
+
+### Connecting to Cisco Devices
+
+Guide: https://oneuptime.com/blog/post/2026-02-21-how-to-use-ansible-with-cisco-ios-devices/view
+
+```bash
+
+# Include as variables 
+ansible_network_os=cisco.ios.ios
+ansible_connection=ansible.netcommon.network_cli
+ansible_user=admin
+ansible_password={{ vault_ios_password }}
+ansible_become=yes
+ansible_become_method=enable
+ansible_become_password={{ vault_enable_password }}
+
+```
+### Using the Docker Container 
+
+Install Docker: https://docs.docker.com/engine/install/ubuntu/
+
+```bash
+
+# Use the docker-compose file to build and run the container
+docker-compose up -d
+
+# Enter the container
+docker exec -it ansible-box /bin/bash
+
+# Run Ansible commands inside the container
+ansible all -m ping
+
+```
+
+### Using Python Virtual Environment
+
+```bash
+
+# Create a virtual environment
+python3 -m venv ./venv
+source venv/bin/activate
+
+# Install dependencies for Ansible and network modules
+sudo apt install libssh-dev build-essential python3-dev
+
+# Install Ansible and dependencies in the virtual environment
+pip install -r requirements.txt
+
+# Run Ansible commands in the virtual environment
+ansible-galaxy collection install cisco.ios
+
+```
+
+### Legacy support
+
+Add the following to support legacy devices
+
+Settings ansible_ssh_common_args does not work, as network_cli seems to ignore this variable. So the settings must the set inside .ssh/config on the ansible controller
+
+```bash
+Host 10.0.0.*
+    KexAlgorithms +diffie-hellman-group14-sha1
+    HostKeyAlgorithms +ssh-rsa
+    MACs +hmac-sha1,hmac-sha1-96
+```
+

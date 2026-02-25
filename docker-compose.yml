@@ -1,0 +1,8 @@
+services:
+  ansible-box:
+    build: .
+    container_name: ansible-box
+    volumes:
+      - .:/ansible
+    working_dir: /ansible
+    command: sleep infinity

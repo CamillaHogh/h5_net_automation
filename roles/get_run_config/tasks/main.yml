@@ -1,3 +1,13 @@
 #SPDX-License-Identifier: MIT-0
 ---
-# tasks file for get_run_config
+- name: Get Running Config
+  cisco.ios.ios_command:
+    commands:
+      - show running-config
+  register: running_config
+
+- name: Save Running Config in a variable
+  ansible.builtin.set_fact:
+    device_running_config: "{{ running_config.stdout[0] }}"
+
+...

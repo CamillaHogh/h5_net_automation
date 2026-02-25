@@ -1,0 +1,22 @@
+# Source: https://oneuptime.com/blog/post/2026-02-21-how-to-use-ansible-with-cisco-ios-devices/view
+---
+- name: Collect all available facts
+  cisco.ios.ios_facts:
+    gather_subset:
+      - all
+  register: facts
+
+- name: Save device summary in a variable
+  ansible.builtin.set_fact:
+    device_summary: |
+      Device: {{ ansible_net_hostname }}
+      Model: {{ ansible_net_model }}
+      IOS Version: {{ ansible_net_version }}
+      Serial Number: {{ ansible_net_serialnum }}
+      Image: {{ ansible_net_image }}
+
+- name: Save device interfaces in a variable
+  ansible.builtin.set_fact:
+    device_interfaces: "{{ ansible_net_interfaces | dict2items | map(attribute='key') | list }}"
+
+...
