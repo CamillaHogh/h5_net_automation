@@ -134,3 +134,8 @@ chmod +x base_config.exp
 
 ```
 
+### Testing the inventory
+
+```bash
+ansible all -m ping
+```
